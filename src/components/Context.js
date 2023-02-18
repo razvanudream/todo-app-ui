@@ -2,7 +2,6 @@ import { createContext, useContext } from "react";
 
 export const TodoStateContext = createContext({
   items: [],
-  user: {},
   filteredItems: [],
 });
 export const TodoDispatchContext = createContext(undefined);
@@ -11,16 +10,8 @@ export const reducer = (state, action) => {
   switch (action.type) {
     case "SET_TODO_ITEMS": {
       return {
-        ...state,
         items: action.args.items,
         filteredItems: action.args.items,
-      };
-    }
-
-    case "SET_USER": {
-      return {
-        ...state,
-        user: state.user,
       };
     }
 
@@ -32,16 +23,19 @@ export const reducer = (state, action) => {
         (item) => updatedItem.deleted && item.id !== updatedItem.id
       );
 
-      newTodos = items.map((item) => {
-        return {
-          ...item,
-          completed:
-            updatedItem.id === item.id ? updatedItem.completed : item.completed,
-        };
-      });
+      if (!updatedItem.deleted) {
+        newTodos = items.map((item) => {
+          return {
+            ...item,
+            completed:
+              updatedItem.id === item.id
+                ? updatedItem.completed
+                : item.completed,
+          };
+        });
+      }
 
       return {
-        ...state,
         items: [...newTodos],
         filteredItems: [...newTodos],
       };

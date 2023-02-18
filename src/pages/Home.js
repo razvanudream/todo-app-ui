@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useQuery, gql, useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import {
   useTodoDispatchContext,
   useTodoStateContext,
@@ -8,41 +8,19 @@ import "../styles/home.css";
 import PageTitle from "../components/PageTitle";
 import ItemList from "../components/ItemList";
 import FilterItems from "../components/FilterItems";
-
-const LIST_TODOS = gql`
-  query listTodos($userId: Int!) {
-    listTodos(userId: $userId) {
-      id
-      completed
-      title
-      userId
-      createdAt
-      updatedAt
-    }
-  }
-`;
-
-const CREATE_TODO = gql`
-  mutation createTodo($title: String!, $userId: Int!) {
-    createTodo(title: $title, userId: $userId) {
-      id
-      completed
-      title
-      userId
-      createdAt
-      updatedAt
-    }
-  }
-`;
+import { useAuth } from "../hooks/useAuth";
+import { CREATE_TODO, LIST_TODOS } from "../graphql/queries";
 
 function Home() {
   const todoState = useTodoStateContext();
   const todoDispatch = useTodoDispatchContext();
+  const authenticatedUser = useAuth();
 
   const { loading, error, data } = useQuery(LIST_TODOS, {
     variables: {
-      userId: 1,
+      userId: authenticatedUser?.id,
     },
+    skip: !authenticatedUser,
   });
 
   const [createTodo] = useMutation(CREATE_TODO);
@@ -55,7 +33,7 @@ function Home() {
       createTodo({
         variables: {
           title: newTitle,
-          userId: 1,
+          userId: authenticatedUser?.id,
         },
       }).then((result) => {
         todoDispatch({
@@ -84,7 +62,7 @@ function Home() {
         </label>
       </form>
       <div className="itemList">
-        {todoState.filteredItems.map((item) => (
+        {todoState?.filteredItems?.map((item) => (
           <ItemList key={item.id} item={item} />
         ))}
       </div>

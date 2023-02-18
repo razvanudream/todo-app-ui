@@ -35,7 +35,8 @@
   color: #a1a4ad;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="password"] {
   outline: 0;
   border-width: 0 0 2px;
   border-color: #d7dae0;

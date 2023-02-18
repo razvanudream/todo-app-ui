@@ -1,31 +1,12 @@
 import React from "react";
 import "../styles/header.css";
 import { useTodoDispatchContext } from "./Context";
-import { gql, useMutation } from "@apollo/client";
-
-const MARK_TODO_UNCOMPLETED = gql`
-  mutation markTodoUncompleted($id: Int!) {
-    markTodoUncompleted(id: $id) {
-      id
-      completed
-    }
-  }
-`;
-
-const MARK_TODO_COMPLETED = gql`
-  mutation markTodoCompleted($id: Int!) {
-    markTodoCompleted(id: $id) {
-      id
-      completed
-    }
-  }
-`;
-
-const DELETE_TODO = gql`
-  mutation deleteTodo($id: Int!) {
-    deleteTodo(id: $id)
-  }
-`;
+import { useMutation } from "@apollo/client";
+import {
+  DELETE_TODO,
+  MARK_TODO_COMPLETED,
+  MARK_TODO_UNCOMPLETED,
+} from "../graphql/queries";
 
 function ItemList({ item }) {
   const todoDispatch = useTodoDispatchContext();
@@ -41,7 +22,7 @@ function ItemList({ item }) {
     }).then((result) => {
       todoDispatch({
         type: "UPDATE_TODO_ITEMS",
-        args: { updatedItem: { id, deleted: result } },
+        args: { updatedItem: { id, deleted: result.data.deleteTodo } },
       });
     });
   };

@@ -12,7 +12,6 @@ import {
 function App() {
   const [state, dispatch] = useReducer(reducer, {
     items: [],
-    user: {},
     filteredItems: [],
   });
 
@@ -20,8 +19,8 @@ function App() {
     <div className="container">
       <TodoStateContext.Provider value={state}>
         <TodoDispatchContext.Provider value={dispatch}>
-          <Header />
           <Router>
+            <Header />
             <Pages />
           </Router>
         </TodoDispatchContext.Provider>

@@ -1,6 +1,16 @@
 .site-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding-bottom: 30px;
+  flex-direction: column;
+}
+
+.site-header__wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logout {
+  color: #1f2a4b;
+  font-size: 16px;
 }

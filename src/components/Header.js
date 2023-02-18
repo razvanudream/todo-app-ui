@@ -1,12 +1,26 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import "../styles/header.css";
 
 function Header() {
+  const navigate = useNavigate();
+  const authenticated = useAuth();
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+
   return (
     <header className="site-header">
-      <div className="wrapper site-header__wrapper">
+      <div className="site-header__wrapper">
         <img src="logo.svg" alt="brand" />
-        <nav className="nav"></nav>
+        {authenticated && (
+          <div onClick={handleLogout} className="logout">
+            Logout
+          </div>
+        )}
       </div>
     </header>
   );
